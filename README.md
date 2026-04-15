@@ -1,13 +1,17 @@
-# 📊 Sales Data Analysis Project
+📊 Sales Data Analysis Project
 
-This is a Python-based data analysis project using **Pandas** and **Matplotlib**.
+This project analyzes product sales data using Python, Pandas, and Matplotlib to extract meaningful business insights.
 
-It analyzes product sales data and provides insights such as:
-- Highest revenue brand
-- Category profitability
-- Most expensive product
-- Best-selling product
-- Correlation between price and sales
+🎯 Objective
+
+The goal of this project is to understand sales performance and identify key patterns such as revenue distribution, product performance, and relationships between price and sales.
+
+📈 Key Insights
+💰 Highest Revenue Brand – Identifies which brand generates the most income
+📊 Category Profitability – Compares revenue across product categories
+💎 Most Expensive Product – Finds premium products in the dataset
+🔥 Best-Selling Product – Determines the most popular item
+🔗 Price vs Sales Correlation – Analyzes the relationship between price and demand
 
 ---
 
@@ -31,3 +35,19 @@ Pandas project/
 ├── requirements.txt
 └── README.md
 ```
+🛠️ Technologies Used
+Python
+Pandas
+Matplotlib
+▶️ How to Run
+
+Install dependencies:
+
+pip install -r requirements.txt
+
+Run the program:
+
+python main.py
+📌 Conclusion
+
+This project demonstrates how raw data can be transformed into meaningful insights that support decision-making.
