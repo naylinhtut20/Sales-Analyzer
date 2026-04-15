@@ -106,7 +106,7 @@ class SalesAnalyzer:
 
     def lowest_revenue_brand(self):
         lowest_brand = self.brand_revenue.idxmin()
-        print(f"{lowest_brand} has Lowest revenue.")
+        print(f"{lowest_brand} has the Lowest revenue.")
 
 def menu():
     print("\n1. Which brand has the highest total revenue?")
@@ -132,8 +132,11 @@ def chart_or_text():
             print("Invalid choice.")
 
 def main():
-    # file = input("Enter a your File path to analysis: ")
-    analyzer = SalesAnalyzer(file= "data.csv")
+    file = input("Enter a your File path to analysis: ")
+    try:
+        analyzer = SalesAnalyzer(file= "data.csv")
+    except FileExistsError:
+        print("File not found.")
     while True:
         menu()
         index = input(": ")
