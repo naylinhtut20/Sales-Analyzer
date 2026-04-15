@@ -1,99 +1,112 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 
-df = pd.read_csv("data.csv")
 
-# Create revenue
-df['Revenue'] = df['Price'] * df['Sales']
+class SalesAnalyzer:
+    def __init__(self, file: str):
+        self.df = pd.read_csv(file)
 
-# 1. Brand with most revenue
-def get_top_brand():
-    brand_revenue = df.groupby('Brand')['Revenue'].sum().sort_values(ascending=False)
-    top_brand = brand_revenue.idxmax()
-    top_value = brand_revenue.max()
-    print(f"\n{top_brand} generates the highest total revenue at ${top_value}.")
-    print(f"This means {top_brand} performs best in total earnings among all brands in this dataset.")
+        # Create revenue
+        self.df['Revenue'] = self.df['Price'] * self.df['Sales']
+        self.brand_revenue = self.df.groupby('Brand')['Revenue'].sum().sort_values(ascending=False)
+        self.sum_category_revenue = self.df.groupby('Category')['Revenue'].sum()
+        self.average_price = self.df.groupby('Brand')['Price'].mean().sort_values(ascending=False)
 
-# Brand chart
-def top_brand_chart():
-    brand_revenue = df.groupby('Brand')['Revenue'].sum().sort_values(ascending=False)
-    brand_revenue.plot(kind='bar')
-    plt.title("Revenue by Brand")
-    plt.xlabel("Brand")
-    plt.ylabel("Revenue")
-    plt.show()
+    # 1. Brand with most revenue
+    def get_top_brand(self):
+        top_brand = self.brand_revenue.idxmax()
+        top_value = self.brand_revenue.max()
+        print(f"\n{top_brand} generates the highest total revenue at ${top_value}.")
+        print(f"This means {top_brand} performs best in total earnings among all brands in this dataset.")
 
-# 2. Category profitability
-def category_revenue():
-    category_revenue = df.groupby('Category')['Revenue'].sum()
-    if category_revenue['Laptop'] > category_revenue['Phone']:
-        print(f"\nLaptops generate more revenue (${category_revenue['Laptop']}) than phones (${category_revenue['Phone']}).")
-        print("This means laptops are the more profitable category in this dataset.")
-    else:
-        print(f"\nPhones generate more revenue (${category_revenue['Phone']}) than laptops (${category_revenue['Laptop']}).")
-        print("This means phones are the more profitable category in this dataset.")
+    # Brand Bar chart
+    def top_brand_chart(self):
+        self.brand_revenue.plot(kind='bar')
+        plt.title("Revenue by Brand")
+        plt.xlabel("Brand")
+        plt.ylabel("Revenue")
+        plt.show()
 
-def category_revenue_chart():
-    category_revenue = df.groupby('Category')['Revenue'].sum()
-    category_revenue.plot(kind='pie')
-    plt.title("Revenue by Category")
-    plt.show()
+    # 2. Category profitability
+    def category_revenue(self):
+        if self.sum_category_revenue['Laptop'] > self.sum_category_revenue['Phone']:
+            print(f"\nLaptops generate more revenue (${self.sum_category_revenue['Laptop']}) than phones (${self.sum_category_revenue['Phone']}).")
+            print("This means laptops are the more profitable category in this dataset.")
+        else:
+            print(f"\nPhones generate more revenue (${self.sum_category_revenue['Phone']}) than laptops (${self.sum_category_revenue['Laptop']}).")
+            print("This means phones are the more profitable category in this dataset.")
 
-# 3. Average price
-def average_price():
-    average_price = df.groupby('Brand')['Price'].mean().sort_values(ascending=False)
-    highest_avg_brand = average_price.idxmax()
-    highest_avg_value = average_price.max()
-    print(f"\n{highest_avg_brand} has the highest average product price at ${highest_avg_value:.2f}.")
-    print("This suggests this brand focuses on more premium-priced products.")
+    # Category revenue Pie chart
+    def category_revenue_chart(self):
+        self.sum_category_revenue.plot(kind='pie')
+        plt.ylabel("")
+        plt.title("Revenue by Category")
+        plt.show()
 
-def average_price_chart():
-    average_price = df.groupby('Brand')['Price'].mean().sort_values(ascending=False)
-    average_price.plot(kind='bar')
-    plt.title("Average Price")
-    plt.xlabel("Brand")
-    plt.ylabel("Price")
-    plt.show()
+    # 3. Average price
+    def average_product_price(self):
+        highest_avg_brand = self.average_price.idxmax()
+        highest_avg_value = self.average_price.max()
+        print(f"\n{highest_avg_brand} has the highest average product price at ${highest_avg_value:.2f}.")
+        print("This suggests this brand focuses on more premium-priced products.")
 
-# 4. Most expensive product
-def most_expesnive():
-    most_expensive_product = df.loc[df['Price'].idxmax()]
-    print(f"\n{most_expensive_product['Brand']} - {most_expensive_product['Model']} is most expensive product at ${most_expensive_product['Price']}.")
-    print("This product is positioned at the top end of the price range in the dataset.")
+    # Average price Bar chart
+    def average_price_chart(self):
+        self.average_price.plot(kind='bar')
+        plt.title("Average Price")
+        plt.xlabel("Brand")
+        plt.ylabel("Price")
+        plt.show()
 
-def product_price_chart():
-    product_price = df.groupby('Brand')['Price'].max().sort_values(ascending=False)
-    product_price.plot(kind='bar')
-    plt.title("Product Price")
-    plt.xlabel("Brand")
-    plt.ylabel("Price")
-    plt.show()
+    # 4. Most expensive product
+    def most_expensive_product(self):
+        most_expensive_products = self.df.loc[self.df['Price'].idxmax()]
+        print(f"\n{most_expensive_products['Brand']} - {most_expensive_products['Model']} is most expensive product at ${most_expensive_products['Price']}.")
+        print("This product is positioned at the top end of the price range in the dataset.")
 
-# 5. Best selling product
-def best_sellin_product():
-    best_selling_product = df.loc[df['Sales'].idxmax()]
-    print(f"\n{best_selling_product['Brand']} - {best_selling_product['Model']} is the best-selling product with {best_selling['Sales']} units sold.")
-    print("This indicates it has the strongest sales volume in the dataset.")
+    # Product Price Bar chart
+    def product_price_chart(self):
+        product_price = self.df.groupby('Brand')['Price'].max().sort_values(ascending=False)
+        product_price.plot(kind='bar')
+        plt.title("Product Price")
+        plt.xlabel("Brand")
+        plt.ylabel("Price")
+        plt.show()
 
-def product_sales_chart():
-    product_sales = df.groupby('Brand')['Sales'].max().sort_values(ascending=False)
-    product_sales.plot(kind='pie')
-    plt.title("Product Sales")
-    plt.show()
+    # 5. Best selling product
+    def best_selling_product(self):
+        best_selling_products = self.df.loc[self.df['Sales'].idxmax()]
+        print(f"\n{best_selling_products['Brand']} - {best_selling_products['Model']} is the best-selling product with {best_selling_products['Sales']} units sold.")
+        print("This indicates it has the strongest sales volume in the dataset.")
 
-# 6. Correlation
-def correlation():
-    correlation = df['Price'].corr(df['Sales'])
+    # Product sales Pie chart
+    def product_sales_chart(self):
+        product_sales = self.df.groupby('Brand')['Sales'].max().sort_values(ascending=False)
+        product_sales.plot(kind='pie')
+        plt.ylabel("")
+        plt.title("Product Sales")
+        plt.show()
 
-    if correlation > 0:
-        print(f"\nThere is a positive correlation ({correlation:.2f}) between price and sales.")
-        print("This suggests higher-priced products tend to sell more in this dataset.")
-    elif correlation < 0:
-        print(f"\nThere is a negative correlation ({correlation:.2f}) between price and sales.")
-        print("This suggests higher-priced products tend to sell less in this dataset.")
-    else:
-        print("\nThere is no clear relationship between price and sales.")
+    # 6. Correlation
+    def correlation(self):
+        correlation = self.df['Price'].corr(self.df['Sales'])
 
+        if correlation > 0:
+            print(f"\nThere is a positive correlation ({correlation:.2f}) between price and sales.")
+            print("This suggests higher-priced products tend to sell more in this dataset.")
+        elif correlation < 0:
+            print(f"\nThere is a negative correlation ({correlation:.2f}) between price and sales.")
+            print("This suggests higher-priced products tend to sell less in this dataset.")
+        else:
+            print("\nThere is no clear relationship between price and sales.")
+    
+    def top_three_brands(self):
+        print("These are the Top 3 Brands:")
+        print(self.brand_revenue.head(3))
+
+    def lowest_revenue_brand(self):
+        lowest_brand = self.brand_revenue.idxmin()
+        print(f"{lowest_brand} has Lowest revenue.")
 
 def menu():
     print("\n1. Which brand has the highest total revenue?")
@@ -102,20 +115,25 @@ def menu():
     print("4. Which is the most expensive product?")
     print("5. Which is the best selling product?")
     print("6. Does higher price mean higher sales?")
+    print("7. Which are the top 3 brands?")
+    print("8. Which is the Lowest revenue brand?")
     print("q. exit.")
 
 def chart_or_text():
-    print("\n1. Chart.")
-    print("2. Text.")
-    index = input(": ")
-    if index == '1':
-        return True
-    elif index == '2':
-        return False
-    else:
-        print("Invalid choice.")
+    while True:
+        print("\n1. Chart.")
+        print("2. Text.")
+        index = input(": ")
+        if index == '1':
+            return True
+        elif index == '2':
+            return False
+        else:
+            print("Invalid choice.")
 
 def main():
+    # file = input("Enter a your File path to analysis: ")
+    analyzer = SalesAnalyzer(file= "data.csv")
     while True:
         menu()
         index = input(": ")
@@ -123,35 +141,39 @@ def main():
             case '1':
                 selectioin = chart_or_text()
                 if selectioin:
-                    top_brand_chart()
+                    analyzer.top_brand_chart()
                 else:
-                    get_top_brand()
+                    analyzer.get_top_brand()
             case '2':
                 selectioin = chart_or_text()
                 if selectioin:
-                    category_revenue_chart()
+                    analyzer.category_revenue_chart()
                 else:
-                    category_revenue()
+                    analyzer.category_revenue()
             case '3':
                 selectioin = chart_or_text()
                 if selectioin:
-                    average_price_chart
+                    analyzer.average_price_chart()
                 else:
-                    average_price()
+                    analyzer.average_price()
             case '4':
                 selectioin = chart_or_text()
                 if selectioin:
-                    product_price_chart()
+                    analyzer.product_price_chart()
                 else:
-                    most_expesnive()
+                    analyzer.most_expensive_product()
             case '5':
                 selectioin = chart_or_text()
                 if selectioin:
-                    product_sales_chart()
+                    analyzer.product_sales_chart()
                 else:
-                    best_sellin_product()
+                    analyzer.best_selling_product()
             case '6':
-                correlation()
+                analyzer.correlation()
+            case '7':
+                analyzer.top_three_brands()
+            case '8':
+                analyzer.lowest_revenue_brand()
             case 'q' | 'quit' | 'exit':
                 break
             case _:
